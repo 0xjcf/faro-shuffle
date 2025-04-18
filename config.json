@@ -1,0 +1,54 @@
+{
+	"version": "0.1.0",
+	"settings": {
+		"defaultModel": "gpt-4-turbo-preview",
+		"fallbackModel": "gpt-3.5-turbo",
+		"maxTokens": 4096,
+		"temperature": 0.2,
+		"complexityThresholds": {
+			"trivial": 0.5,
+			"simple": 1.5,
+			"moderate": 2.5,
+			"complex": 3.5,
+			"veryComplex": 4.5
+		},
+		"defaultExpansionRatio": 1.5,
+		"minSubtasks": 2,
+		"maxSubtasks": 10
+	},
+	"templates": {
+		"taskAnalysis": "prompts/task_analysis_template.md",
+		"taskReport": "prompts/task_report_template.md"
+	},
+	"integrations": {
+		"jira": {
+			"enabled": false,
+			"apiUrl": "https://your-domain.atlassian.net/rest/api/3",
+			"projectKey": "PROJECT",
+			"subtaskIssueType": "Sub-task"
+		},
+		"github": {
+			"enabled": false,
+			"owner": "username",
+			"repo": "repository-name",
+			"issueLabels": ["task-expanded"]
+		},
+		"gitlab": {
+			"enabled": false,
+			"projectId": "project-id",
+			"issueLabels": ["task-expanded"]
+		},
+		"linear": {
+			"enabled": false,
+			"teamId": "team-id"
+		}
+	},
+	"outputFormats": ["json", "markdown", "csv"],
+	"defaultOutputFormat": "markdown",
+	"logging": {
+		"level": "info",
+		"file": "logs/taskexpander.log",
+		"rotationSize": "10MB",
+		"maxFiles": 5
+	}
+}

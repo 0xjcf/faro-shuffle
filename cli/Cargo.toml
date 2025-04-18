@@ -1,0 +1,11 @@
+[package]
+name = "faro_shuffle"
+version = "0.1.0"
+edition = "2024"
+description = "AI-powered task complexity analyzer"
+
+[dependencies]
+faro_shuffle_core = { path = "../core" }
+clap = { version = "4.4", features = ["derive"] }
+tokio = { version = "1", features = ["full"] }
+color-eyre = "0.6"
