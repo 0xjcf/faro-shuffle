@@ -2,7 +2,7 @@
 
 > **Land better clients. Protect your time. Scope smarter—before the proposal is even written.**
 
-`faro-shuffle` is a local-first CLI that uses AI to analyze your task descriptions or client intake notes, then returns a **complexity score and plain-language rationale**. It's built for developers, freelancers, and agencies who are tired of guessing how much effort a project will *really* take.
+`faro-shuffle` is a local-first CLI that uses AI to analyze your task descriptions or client intake notes, **considering the context of your project directory**, then returns a **complexity score and plain-language rationale**. It's built for developers, freelancers, and agencies who are tired of guessing how much effort a project will *really* take.
 
 ---
 
@@ -23,17 +23,24 @@ Whether you're building a proposal, deciding your rate, or just protecting your 
 ## ⚙️ How It Works
 
 ```sh
-faro-shuffle analyze ./intake/client-brief-001.md
+# Analyze a task, providing the project directory for context
+faro-shuffle analyze ./path/to/task.md --project-dir ./path/to/project
+
+# Get output in JSON format
+faro-shuffle analyze ./task.md --project-dir . --format json
 ```
 
-### Example Output:
-```
-Score: 9/10 (Very Complex)
-Rationale: The brief includes real-time voice input, gamification mechanics, and AI-based parsing. Requires integration across frontend, backend, and potentially ML systems. User management is implied but undefined.
+### Example Output (JSON):
+```json
+{
+  "score": 8,
+  "rationale": "Considering the project context (Rust, ~100 .rs files), adding this feature requires significant changes to the core engine and API layers, making it complex."
+}
 ```
 
-> ✅ Instant insight  
-> ✅ Honest complexity score  
+> ✅ Instant insight (now context-aware!)
+> ✅ Honest complexity score
+> ✅ Flexible output (Text, JSON, Markdown)
 > ✅ No cloud. No signup. No BS.
 
 ---
@@ -51,7 +58,11 @@ cargo build --release
 
 **Run CLI:**
 ```sh
-./target/release/faro-shuffle analyze ./your-task.md
+# Basic analysis
+./target/release/faro_shuffle analyze ./your-task.md
+
+# Analysis with project context and JSON output
+./target/release/faro_shuffle analyze ./your-task.md --project-dir /path/to/your/project --format json
 ```
 
 > 📝 Your input file should be a simple Markdown file with a task or project description.
@@ -82,7 +93,7 @@ Runs on top of **Ollama**, using local quantized LLMs like Mistral or LLaMA 3.
 
 ## 📈 Roadmap
 
-- [ ] JSON + Markdown output options
+- [x] JSON + Markdown output options
 - [ ] Subtask decomposition engine (Pro tier)
 - [ ] GitHub issue integration
 - [ ] `client-intake-system` integration
