@@ -6,6 +6,7 @@ description = "AI-powered task complexity analyzer"
 
 [dependencies]
 faro_shuffle_core = { path = "../core" }
-clap = { version = "4.4", features = ["derive"] }
+clap = { version = "4.5.36", features = ["derive"] }
 tokio = { version = "1", features = ["full"] }
-color-eyre = "0.6"
+color-eyre = "0.6.3"
+serde_json = "1.0"

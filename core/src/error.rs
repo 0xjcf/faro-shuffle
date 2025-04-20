@@ -1,25 +1,32 @@
 use thiserror::Error;
+use std::path::PathBuf;
 
-#[derive(Debug, Error)]
+#[derive(Error, Debug)]
 pub enum Error {
-    #[error("IO error: {0}")]
+    #[error("File I/O error: {0}")]
     Io(#[from] std::io::Error),
     
-    #[error("Failed to parse Markdown: {0}")]
+    #[error("Failed to parse markdown: {0}")]
     MarkdownParse(String),
     
-    #[error("HTTP request error: {0}")]
-    Request(#[from] reqwest::Error),
+    #[error("Task description is empty or invalid")]
+    InvalidTaskDescription,
     
-    #[error("Failed to parse Ollama response: {0}")]
-    ResponseParse(String),
+    #[error("LLM API request failed: {0}")]
+    LlmRequest(#[from] reqwest::Error),
     
-    #[error("Ollama API error: {0}")]
-    OllamaApi(String),
+    #[error("Failed to parse LLM response: {0}")]
+    LlmResponseParse(#[from] serde_json::Error),
     
-    #[error("Invalid task: {0}")]
-    InvalidTask(String),
+    #[error("LLM response did not contain expected fields")]
+    LlmResponseFormat,
     
-    #[error("Serialization/deserialization error: {0}")]
-    Serde(#[from] serde_json::Error),
+    #[error("Complexity score out of range (0-10): {0}")]
+    ScoreOutOfRange(i32),
+    
+    #[error("Project path is not a directory: {0}")]
+    ProjectPathNotDirectory(PathBuf),
+    
+    #[error("Unknown error")]
+    Unknown,
 } 

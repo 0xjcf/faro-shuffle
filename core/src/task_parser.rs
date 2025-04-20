@@ -22,7 +22,8 @@ impl TaskParser {
     /// Parse a task from a markdown file
     pub fn parse_file<P: AsRef<Path>>(&self, path: P) -> Result<Task> {
         let content = fs::read_to_string(path)?;
-        self.parse_markdown(&content)
+        // Call the existing markdown parsing logic
+        self.parse_markdown(&content) 
     }
 
     /// Parse a task from markdown content
@@ -30,7 +31,8 @@ impl TaskParser {
         // For V1, we're just extracting text and doing minimal validation
         // Later versions can parse more structured formats
         if content.trim().is_empty() {
-            return Err(Error::InvalidTask("Task description cannot be empty".into()));
+            // Use the correct error variant
+            return Err(Error::InvalidTaskDescription);
         }
 
         // Use the markdown crate to parse the markdown, but we're just extracting text for now
@@ -40,7 +42,8 @@ impl TaskParser {
         let description = html_to_text(&parsed);
         
         if description.trim().is_empty() {
-            return Err(Error::InvalidTask("Task description cannot be empty after parsing".into()));
+            // Use the correct error variant
+            return Err(Error::InvalidTaskDescription);
         }
         
         Ok(Task { description })

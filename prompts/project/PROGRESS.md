@@ -23,10 +23,10 @@ This project follows a sequential development pattern where phases build upon pr
 
 | Phase ID | Component | Description | Key Dependencies | Status | Effort Est. | Notes |
 |----------|-----------|-------------|------------------|--------|-------------|-------|
-| 01 | Core Analysis | Task parsing, LLM integration, complexity scoring | Rust, LLM API | Defined | Medium (24h) | |
-| 02 | CLI Interface | Command-line tool with argument parsing | Phase 01 | Defined | Small (16h) | |
-| 03 | Output Formats | JSON schema, Markdown templates, console output | Phase 01, 02 | Defined | Medium (24h) | |
-| 04 | Project Context | File structure analysis, technology detection | Phase 01 | Defined | Medium (32h) | |
+| 01 | Core Analysis | Task parsing, LLM integration, complexity scoring | Rust, LLM API | Completed | Medium (24h) | V1: Core analysis (Markdown parse, Ollama call, score/rationale). Subtask generation deferred. |
+| 02 | CLI Interface | Command-line tool with argument parsing | Phase 01 | Completed | Small (16h) | V1: Basic `analyze` command. Deferred: `expand`, `config`, `version`, stdin/file output, config mgmt. |
+| 03 | Output Formats | JSON schema, Markdown templates, console output | Phase 01, 02 | In Progress | Medium (24h) | V1: Basic console output. V2: Added JSON & basic Markdown output. Deferred: Full schemas, templates, other formats. |
+| 04 | Project Context | File structure analysis, technology detection | Phase 01 | Completed | Medium (32h) | V2: Implemented basic context parsing (file structure, tech detection via markers/heuristics) & LLM prompt integration. |
 | 05 | MCP Integration | MCP protocol module for editor integration | Phase 01, 03 | Defined | Large (40h) | |
 | 06 | Advanced Features | ML enhancements, integrations, historical analysis | Phase 01-05 | Defined | X-Large (80h) | |
 

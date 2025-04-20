@@ -1,216 +1,139 @@
-# 🃏 faro-shuffle
+# 🧠 Faro Shuffle (soon to be renamed) – Your AI-Powered Project Scoping Tool
 
-**Know instantly if your project is a 2-hour tweak or a 2-week trap—before you waste time.**
+> **Land better clients. Protect your time. Scope smarter—before the proposal is even written.**
 
-`faro-shuffle` is an AI-powered task complexity analyzer that helps developers, freelancers, and project managers avoid time estimation disasters. It uses local AI to analyze your task descriptions and provide an objective complexity score with rationale.
+`faro-shuffle` is a local-first CLI that uses AI to analyze your task descriptions or client intake notes, then returns a **complexity score and plain-language rationale**. It's built for developers, freelancers, and agencies who are tired of guessing how much effort a project will *really* take.
 
-## The Problem
+---
 
-Ever wasted 12 hours on a task that *should've* taken 2? Or worse, started something that turned into a 2-week nightmare?
+## 🚀 Why Use Faro?
 
-Task complexity is notoriously difficult to estimate. We tend to:
-- Underestimate complex tasks (optimism bias)
-- Overlook hidden dependencies
-- Miss edge cases that explode complexity
+You've been here before:
 
-## The Solution
+- A client sends you a vague brief.
+- You nod, guess, and price it.
+- Then it explodes into something 10x more complex.
 
-`faro-shuffle` tells you up front how hard a task really is—and why—before you commit to it:
+`faro-shuffle` is your **early warning system**. It reads your intake notes and tells you how difficult the task is—*before you commit*.  
 
-- **Simple CLI workflow**: Write your task in markdown, get an instant complexity score
-- **Local AI analysis**: Uses your Ollama instance for privacy and speed
-- **Actionable insights**: Get recommendations based on complexity score
-- **No configuration needed**: Works out of the box with sensible defaults
+Whether you're building a proposal, deciding your rate, or just protecting your calendar, this tool gives you clarity fast.
 
-## Installation
+---
 
-### Prerequisites
+## ⚙️ How It Works
 
-- Rust toolchain (install via [rustup](https://rustup.rs/))
-- [Ollama](https://ollama.ai/) running locally with the `llama3` model
-
-```bash
-# Install Ollama if you haven't already (macOS example)
-curl -fsSL https://ollama.ai/install.sh | sh
-
-# Pull the llama3 model (if you don't have it)
-ollama pull llama3
-
-# Make sure Ollama is running
-ollama serve
+```sh
+faro-shuffle analyze ./intake/client-brief-001.md
 ```
 
-### Building from Source
+### Example Output:
+```
+Score: 9/10 (Very Complex)
+Rationale: The brief includes real-time voice input, gamification mechanics, and AI-based parsing. Requires integration across frontend, backend, and potentially ML systems. User management is implied but undefined.
+```
 
-```bash
-# Clone the repository
-git clone https://github.com/your-username/faro-shuffle.git
-cd faro-shuffle
+> ✅ Instant insight  
+> ✅ Honest complexity score  
+> ✅ No cloud. No signup. No BS.
 
-# Build the project
+---
+
+## 📦 Installation
+
+> **Requirements:**  
+> - Rust (v1.74+ recommended)  
+> - Ollama running locally (with a supported model like `mistral` or `llama3`)  
+
+**Install dependencies:**
+```sh
 cargo build --release
-
-# Move binary to your path (optional)
-cp target/release/faro_shuffle /usr/local/bin/faro-shuffle
 ```
 
-## Usage
-
-1. Create a markdown file with your task description:
-
-```markdown
-# Add User Authentication to Web App
-
-Need to implement user authentication for the web application. Should include:
-- Login form with email/password
-- Registration flow
-- Password reset functionality
-- JWT token implementation
-- User profile page
+**Run CLI:**
+```sh
+./target/release/faro-shuffle analyze ./your-task.md
 ```
 
-2. Analyze the task:
+> 📝 Your input file should be a simple Markdown file with a task or project description.
+
+---
+
+## 💼 Use Cases
+
+### 🔍 For Freelancers & Agencies
+- Analyze client briefs **before** you quote
+- Spot vague or high-risk requests early
+- Set better expectations with clients
+- Use it alongside your client intake forms
+
+### 🧑‍💻 For Developers
+- Evaluate your own backlog tasks
+- Prioritize based on effort vs impact
+- Use AI to avoid time sinks and rabbit holes
+
+---
+
+## 🔒 Local-First, Privacy-Respecting
+
+No APIs. No uploads. Your project data never leaves your machine.  
+Runs on top of **Ollama**, using local quantized LLMs like Mistral or LLaMA 3.
+
+---
+
+## 📈 Roadmap
+
+- [ ] JSON + Markdown output options
+- [ ] Subtask decomposition engine (Pro tier)
+- [ ] GitHub issue integration
+- [ ] `client-intake-system` integration
+- [ ] SaaS-ready web UI (optional)
+- [ ] Developer analytics (complexity trends, historical effort estimates)
+
+---
+
+## 🧪 Integration Example (Coming Soon)
+
+Seamlessly plug into your `client-intake-system`:
 
 ```bash
-faro-shuffle analyze path/to/task.md
+# After a client submits a form:
+faro-shuffle analyze ./intake/generated/brief-XYZ.md >> ./scoping/logs/report-XYZ.txt
 ```
 
-3. Get your complexity score and insights:
-
-```
-📊 Task Complexity Analysis
----------------------------
-🔢 Complexity Score: 7 / 10
-💡 Rationale: Authentication involves security considerations, multiple user flows, 
-and JWT implementation, making it moderately complex.
-
-📝 Recommendation:
-  This is a complex task. Allow for unexpected challenges.
-```
-
-## Coming Soon: Faro Pro
-
-Get full subtask decomposition, project-wide scoring, and exportable reports for teams. [Join the early access list](https://example.com/waitlist).
-
-## License
-
-MIT
-
-# Project Kickoff: faro-shuffle
-
-## 🎯 Overall Vision & Goal
-faro-shuffle is a modular system that uses AI to analyze task complexity and automatically generate subtasks. It provides standardized inputs/outputs that work across different project structures and integrates with existing workflows through MCP, CLI, and potentially API interfaces.
+Use this to:
+- Auto-score project complexity
+- Flag high-risk proposals
+- Prep smarter follow-up questions
 
 ---
 
-## 🧩 Core Components / Systems
+## 👥 Who It's For
 
-1.  **Core Analysis Engine:** Parses tasks, gathers context, and analyzes complexity using LLM.
-2.  **LLM Integration Layer:** Connects to various LLM providers with standardized prompts and fallbacks.
-3.  **Input Interfaces:** CLI and MCP module for editor integration.
-4.  **Output Formatters:** Standardized JSON, Markdown, and console reporting.
-5.  **Project Context Parser:** Analyzes project structure, file contents, and dependencies.
-
----
-
-## ⚙️ High-Level Workflow
-
-```mermaid
-graph TD
-    A[Task Selection] --> B[Context Gathering];
-    B --> C[LLM Analysis];
-    C --> D[Subtask Generation];
-    D --> E[Output Formatting];
-    E --> F1[JSON Output];
-    E --> F2[Markdown Report];
-    E --> F3[Console Output];
-    F1 --> G[Optional Integrations];
-    F2 --> G;
-    G --> H1[Issue Tracker];
-    G --> H2[Project Management];
-    
-    subgraph "Input Methods"
-        I1[CLI Command] --> A;
-        I2[MCP Module] --> A;
-        I3[API Call] --> A;
-    end
-```
-
-### V1 Workflow (Minimal Focus)
-
-```mermaid
-graph TD
-    subgraph "V1 Workflow"
-        A[CLI: `faro-shuffle analyze <task_file>`] --> B(Read Task File);
-        B --> C{Core Engine: Analyze Complexity};
-        C -- Task Description --> D[LLM Call (Ollama)];
-        D -- Score & Rationale --> C;
-        C --> E[Format Output];
-        E --> F[Display to Console];
-    end
-```
+- 🧑‍💻 Freelancers tired of scope creep
+- 🏢 Agencies who quote custom projects weekly
+- 🧠 Devs who want AI to sanity-check tasks
+- 🧩 PMs who want to clarify team workload before assigning tickets
 
 ---
 
-## 🏗️ Required Scaffolds (from dev-setup)
+## 💬 Join the Waitlist
 
--   **rust-lib:** Core analysis engine and utility functions.
--   **rust-cli:** Command-line interface for standalone usage.
--   **rust-api:** Optional HTTP API for remote integration.
--   **mcp-module:** MCP protocol module for editor integration.
-
----
-
-## 🗓️ Phased Implementation Plan (Index)
-
-**Phase 1: Core Analysis Engine**
-   - *See: prompts/core/01-task-analysis-engine.md*
-   - Key Outcomes: Basic task parsing, LLM integration, complexity scoring.
-
-**Phase 2: CLI Interface**
-   - *See: prompts/cli/02-command-line-interface.md*
-   - Key Outcomes: Functional CLI with argument parsing and configuration.
-
-**Phase 3: Output Formats**
-   - *See: prompts/output/03-output-formatters.md*
-   - Key Outcomes: JSON schema, Markdown templates, console reporting.
-
-**Phase 4: Project Context**
-   - *See: prompts/context/04-project-context-parser.md*
-   - Key Outcomes: File structure analysis, dependency mapping, technology detection.
-
-**Phase 5: MCP Integration**
-   - *See: prompts/mcp/05-mcp-module-implementation.md*
-   - Key Outcomes: MCP protocol support, editor communication.
-
-**Phase 6: Advanced Features**
-   - *See: prompts/advanced/06-advanced-features.md*
-   - Key Outcomes: Historical analysis, ML improvements, issue tracker integration.
+> **Coming Soon:** Faro Pro  
+> - Auto-decompose tasks  
+> - Subtask scoring  
+> - Project-wide scoping dashboards  
+> - Markdown export for clients  
+> 👉 [Join the waitlist](#)
 
 ---
 
-## 🛠️ Key Technologies & Conventions
+## 📣 Shoutouts & Credits
 
--   **Core Language:** Rust
--   **Package Manager:** Cargo
--   **Task Runner:** just (`justfile`)
--   **Linting/Formatting:** rustfmt, clippy
--   **Testing:** cargo-nextest
--   **Containerization:** Docker (optional)
--   **Environment:** direnv (`.envrc`)
--   **Version Control:** Git, Conventional Commits
--   **Documentation:** Markdown, cargo doc
+Built with ❤️ and frustration by [@0xjcf](https://github.com/0xjcf).  
+Using [Rust](https://www.rust-lang.org/), [Ollama](https://ollama.com), and [Mistral](https://mistral.ai).
 
 ---
 
-## 🚀 Setup Instructions
+## 🧠 Bonus: What's in a Name?
 
-**Note:** These instructions cover the minimal V1 setup focusing on the core engine and CLI. The full vision in this README includes components planned for later phases.
-
-1.  `# git clone https://github.com/your-org/faro-shuffle.git  # Replace with actual repo URL`
-2.  `cd faro-shuffle`
-3.  Ensure `../dev-setup` exists relative to this directory.
-4.  Ensure `justfile` (this project's task runner) exists in this directory.
-5.  Run `just setup` (This will bootstrap V1 components and configure the environment using tasks defined in the `justfile`).
-
-    *Alternatively, run `just bootstrap` first, then `direnv allow` manually.* 
+This project may be rebranded soon to better reflect its focus on scoping, complexity scoring, and AI-powered clarity. Suggestions welcome. 😉 
