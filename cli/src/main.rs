@@ -67,11 +67,19 @@ async fn main() -> Result<()> {
             // Display results based on format
             match format {
                 OutputFormat::Text => {
-                    // Current text output logic
+                    // Current text output logic, now with subtasks
                     println!("\n📊 Task Complexity Analysis");
                     println!("---------------------------");
                     println!("🔢 Complexity Score: {} / 10", result.score);
                     println!("💡 Rationale: {}", result.rationale);
+                    
+                    if !result.subtasks.is_empty() {
+                        println!("\n📋 Suggested Subtasks:");
+                        for subtask in &result.subtasks {
+                            println!("  - {}. {}", subtask.id, subtask.title);
+                        }
+                    }
+
                     println!("\n📝 Recommendation:");
                     match result.score {
                         1..=3 => println!("  This is a relatively simple task. Good for a quick win!"),
@@ -85,16 +93,25 @@ async fn main() -> Result<()> {
                     println!("Join the early access list: https://example.com/waitlist");
                 }
                 OutputFormat::Json => {
-                    // JSON output logic (requires ComplexityScore to be Serializable)
+                    // JSON output now includes subtasks automatically due to Serialize derive
                     let json_output = serde_json::to_string_pretty(&result)
                         .map_err(|e| color_eyre::eyre::eyre!("Failed to serialize result to JSON: {}", e))?;
                     println!("{}", json_output);
                 }
                 OutputFormat::Markdown => {
-                    // Markdown output logic
+                    // Markdown output logic, now with subtasks
                     println!("# 📊 Task Complexity Analysis");
                     println!("- **Score**: {} / 10", result.score);
                     println!("- **Rationale**: {}", result.rationale);
+                    
+                    if !result.subtasks.is_empty() {
+                        println!("
+## 📋 Suggested Subtasks");
+                        for subtask in &result.subtasks {
+                            println!("- {}. {}", subtask.id, subtask.title);
+                        }
+                    }
+
                     println!("
 ## Recommendation");
                     let recommendation = match result.score {

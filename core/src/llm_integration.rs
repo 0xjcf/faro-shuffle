@@ -5,21 +5,26 @@ use reqwest::Client;
 use async_trait::async_trait;
 use crate::project_context::ProjectContext;
 
-/// Template for the complexity analysis prompt
+/// Template for the complexity analysis prompt, now including subtask request
 const COMPLEXITY_PROMPT_TEMPLATE: &str = r#"
-You are a task complexity analyzer. 
-Given a task description, analyze its complexity on a scale of 1-10 (where 1 is trivial and 10 is extremely complex).
-Provide a brief explanation for your rating (1-3 sentences).
+You are a task complexity analyzer and decomposer.
+Given a task description and optional project context, analyze its complexity on a scale of 1-10 (1=trivial, 10=extremely complex).
+Then, break the main task down into a list of logical subtasks (typically 3-7) needed to complete it.
+Provide a brief explanation (1-3 sentences) for the overall complexity rating.
 
 Task Description:
 ------------
 {task_description}
 ------------
-
-Return your response in JSON format with the following structure:
+{project_context_section} Return your response in JSON format with the following structure:
 {
   "score": <number between 1 and 10>,
-  "rationale": "<brief explanation for the score>"
+  "rationale": "<brief explanation for the score>",
+  "subtasks": [
+    { "title": "<Title of subtask 1>" },
+    { "title": "<Title of subtask 2>" },
+    ...
+  ]
 }
 "#;
 
@@ -34,13 +39,23 @@ pub trait LlmClient {
     ) -> Result<ComplexityResponse>;
 }
 
-/// Response from the complexity analysis
+/// Represents a subtask item as expected from the LLM JSON response
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct SubtaskResponseItem {
+    // Assuming the LLM just gives us the title for now
+    pub title: String,
+}
+
+/// Response from the complexity analysis, including subtasks
 #[derive(Debug, Deserialize, Serialize, Clone)]
 pub struct ComplexityResponse {
     /// Complexity score from 1-10
     pub score: u8,
     /// Brief explanation for the score
     pub rationale: String,
+    /// List of generated subtasks (optional for robustness)
+    #[serde(default)] // Handle cases where LLM might omit it
+    pub subtasks: Vec<SubtaskResponseItem>,
 }
 
 /// Ollama API request for model generation
@@ -76,27 +91,22 @@ impl OllamaClient {
     
     /// Create the complexity analysis prompt for the given task description and optional context
     fn create_complexity_prompt(&self, task_description: &str, context: Option<&ProjectContext>) -> String {
-        let mut prompt = COMPLEXITY_PROMPT_TEMPLATE.replace("{task_description}", task_description);
-        
-        if let Some(ctx) = context {
-            let context_str = format!(
+        let context_str = if let Some(ctx) = context {
+            format!(
                 "\n\nProject Context:\n------------\nDetected Technologies: {:?}\nFile Counts (Top 5): {}\n------------",
                 ctx.technologies,
                 ctx.file_counts.iter()
-                   .take(5) // Limit to top 5 for brevity
+                   .take(5) 
                    .map(|(ext, count)| format!("{}: {}", ext, count))
                    .collect::<Vec<_>>().join(", ")
-            );
-            // Insert context before the JSON instruction part
-            if let Some(json_instruction_pos) = prompt.find("Return your response in JSON format") {
-                 prompt.insert_str(json_instruction_pos, &context_str);
-            } else {
-                // Fallback: append if specific marker not found
-                prompt.push_str(&context_str);
-            }
-        }
+            )
+        } else {
+            String::new() // Empty string if no context
+        };
         
-        prompt
+        COMPLEXITY_PROMPT_TEMPLATE
+            .replace("{task_description}", task_description)
+            .replace("{project_context_section}", &context_str) // Replace context placeholder
     }
 }
 
@@ -181,7 +191,8 @@ mod tests {
         assert!(prompt.contains("Add a feature"));
         assert!(prompt.contains("Project Context:"));
         assert!(prompt.contains("Detected Technologies: [Rust]"));
-        assert!(prompt.contains("File Counts (Top 5): rs: 100, toml: 5")); // Order might vary
+        assert!(prompt.contains("File Counts (Top 5): rs: 100, toml: 5"));
         assert!(prompt.contains("Return your response in JSON format"));
+        assert!(prompt.contains("\"subtasks\": [")); // Check for subtask instruction
     }
 } 

@@ -5,6 +5,15 @@ use crate::project_context::{analyze_project_context, ProjectContext};
 use std::path::Path;
 use serde::{Deserialize, Serialize};
 
+/// Represents a subtask generated from the main task analysis
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Subtask {
+    pub id: usize, // Simple index for now
+    pub title: String,
+    // Optional: Add estimated complexity/effort later if needed
+    // pub complexity_estimate: String, 
+}
+
 /// Represents a complexity score with rationale
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ComplexityScore {
@@ -12,13 +21,25 @@ pub struct ComplexityScore {
     pub score: u8,
     /// Explanation for the score
     pub rationale: String,
+    /// List of generated subtasks
+    pub subtasks: Vec<Subtask>,
 }
 
 impl From<ComplexityResponse> for ComplexityScore {
     fn from(response: ComplexityResponse) -> Self {
+        // Map SubtaskResponseItem to Subtask
+        let subtasks = response.subtasks.into_iter()
+            .enumerate() // Use enumerate to get an index for the ID
+            .map(|(index, item)| Subtask {
+                id: index + 1, // Use 1-based indexing for ID
+                title: item.title,
+            })
+            .collect();
+            
         Self {
             score: response.score,
             rationale: response.rationale,
+            subtasks, // Add the mapped subtasks
         }
     }
 }
@@ -91,6 +112,7 @@ mod tests {
             Ok(ComplexityResponse {
                 score,
                 rationale: format!("Mock rationale for: {}", task_description),
+                subtasks: vec![],
             })
         }
     }
